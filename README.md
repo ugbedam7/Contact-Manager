@@ -1,4 +1,4 @@
-# Backend:
+# Contact-Manager Backend:
 
 ## Endpoint descriptions,
 
@@ -25,4 +25,3 @@
 
   Email Notifications (Nodemailer)
   When a user adds a new contact, they receive an email notification.
-# Contact-Manager
