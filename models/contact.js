@@ -5,6 +5,15 @@ const ContactSchema = new Schema({
   name: String,
   email: String,
   phone: String,
+  imgUrl: {
+    type: String,
+    required: true
+  },
+
+  ImgPublicId: {
+    type: String,
+    required: true
+  },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
