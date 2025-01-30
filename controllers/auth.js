@@ -24,7 +24,7 @@ const registerUser = async (req, res) => {
     if (existingUser) {
       return res.status(400).json({
         success: false,
-        error: `Email is already taken`
+        error: `User already exists`
       });
     }
 
@@ -120,7 +120,33 @@ const loginUser = async (req, res) => {
   }
 };
 
+// @Desc log User Out
+// @Route POST /api/auth/logout
+// @Access Public
+const logoutUser = async (req, res) => {
+  // Invalidates the token when the user logs out
+  try {
+    res.cookie('token', '', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV !== 'development',
+      sameSite: 'strict',
+      expires: new Date(0)
+    });
+
+    res.status(200).json({
+      success: true,
+      message: 'User logged out.'
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      error: `Internal server error: ${err.message}`
+    });
+  }
+};
+
 module.exports = {
   loginUser,
-  registerUser
+  registerUser,
+  logoutUser
 };
