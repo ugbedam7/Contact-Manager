@@ -5,18 +5,12 @@ const ContactSchema = new Schema({
   name: String,
   email: String,
   phone: String,
-  imgUrl: {
-    type: String,
-    required: true
-  },
-
-  ImgPublicId: {
-    type: String,
-    required: true
-  },
+  imgUrl: String,
+  imgId: String,
   owner: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    required: true
   }
 });
 
