@@ -17,14 +17,14 @@ const addContactEmail = async ({ email }) => {
     from: 'clickviralng@gmail.com',
     to: email,
     subject: 'New Contact Added',
-    text: `Be notified that a new contact with ${email} has been added`
+    text: `Be notified that your contact details have been added`
   };
 
   try {
     await transporter.sendMail(mailOptions);
     return { message: 'New contact notification sent to your email' };
   } catch (err) {
-    throw new Error('Error sending OTP: ' + err.message);
+    throw new Error('Error adding contact: ' + err.message);
   }
 };
 
