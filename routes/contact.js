@@ -4,4 +4,6 @@ const { checkAuth } = require('../middleware/authCheck');
 const { Router } = express;
 const router = Router();
 
-router.post('/contacts', checkAuth, addContact);
+router.post('/', checkAuth, addContact);
+
+module.exports = router;

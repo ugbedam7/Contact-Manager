@@ -1,6 +1,7 @@
 const express = require('express');
 const connectDB = require('./database/db');
 const authRoutes = require('./routes/user');
+const contactRoutes = require('./routes/contact');
 const cors = require('cors');
 require('dotenv').config();
 
@@ -12,7 +13,7 @@ app.use(cors());
 
 // Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/contacts', require('./routes/contact'));
+app.use('/api/contacts', contactRoutes);
 
 // Start Server
 const start = async () => {
