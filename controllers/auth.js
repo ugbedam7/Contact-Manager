@@ -68,9 +68,9 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
   try {
     // Get the user credentials from the request body
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
-    let user = await User.findOne({ username });
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(400).json({
@@ -92,7 +92,7 @@ const loginUser = async (req, res) => {
     accessToken = jwt.sign(
       {
         userId: user._id,
-        username: user.username,
+        email: user.email,
         role: user.role
       },
       process.env.JWT_SECRET_KEY,
@@ -101,14 +101,10 @@ const loginUser = async (req, res) => {
       }
     );
 
-    // Modify the session data object
-    req.session.auth = true;
-    req.session.user = user;
-
     res
       .cookie('token', accessToken, {
         maxAge: 3600000, // 1 hour
-        signed: true
+        signed: false
       })
       .status(200)
       .json({
@@ -116,10 +112,10 @@ const loginUser = async (req, res) => {
         message: 'User Login successfull',
         accessToken
       });
-  } catch (error) {
+  } catch (err) {
     res.status(500).json({
       success: false,
-      error: `Internal Server Error: ${error.message}`
+      error: `Internal Server Error: ${err.message}`
     });
   }
 };
