@@ -1,4 +1,4 @@
-const cloudinary = require('../helper/cloudinary');
+const cloudinary = require('../config/cloudinary');
 
 /** uploadImage function expects a file path not the file's binary content.
 * 1. The cloudinary.uploader.upload() method requires the path to the file

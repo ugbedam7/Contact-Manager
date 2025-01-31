@@ -1,22 +1,42 @@
 const { uploadImage } = require('../helper/cloudinary');
 const Contact = require('../models/contact');
+const User = require('../models/user');
 const addContactEmail = require('../utils/email');
 
 // Add Contact
 const addContact = async (req, res) => {
-  const userId = req.user.id;
-
-  if (!req.file || Object.keys(req.file).length === 0) {
-    return res.status(400).json({ message: 'No file was uploaded.' });
-  }
-
-  // Get the file object from the request object
-  const file = req.files[0];
-  // Pass the path property of the file object to uploadImage
-  const { url, publicId } = await uploadImage(file.path);
-
   try {
+    const userId = req.user.id;
     const { name, email, phone } = req.body;
+
+    if (!name || !email || !phone) {
+      return res.status(400).json({
+        success: false,
+        error: 'Please provide name, email and phone'
+      });
+    }
+
+    // Get the file object from the request object
+    const file = req.file;
+
+    if (!file) {
+      return res.status(400).json({
+        sucess: false,
+        error: 'No file uploaded'
+      });
+    }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        error: 'User not found'
+      });
+    }
+
+    // Pass the path property of the file object to uploadImage
+    const { url, publicId } = await uploadImage(file.path);
 
     const contact = await Contact.create({
       name,
@@ -24,11 +44,11 @@ const addContact = async (req, res) => {
       phone,
       owner: userId,
       imgUrl: url,
-      ImgId: publicId
+      imgId: publicId
     });
 
     // Send Email Notification
-    await addContactEmail(email);
+    await addContactEmail(user.email);
 
     res.status(201).json({
       success: true,
@@ -43,28 +63,46 @@ const addContact = async (req, res) => {
   }
 };
 
-// // Update Contact (Only owner or admin)
-// app.put("/contacts/:id", checkAuth, async (req, res) => {
-//     const contact = await Contact.findById(req.params.id);
-//     if (!contact) return res.status(404).json({ error: "Contact not found" });
-//     if (contact.owner.toString() !== req.user.id && req.user.role !== "admin") {
-//       return res.status(403).json({ error: "Not authorized" });
-//     }
-//     Object.assign(contact, req.body);
-//     await contact.save();
-//     res.json(contact);
+// // Get All Contacts
+// app.get('/contacts', checkAuth, async (req, res) => {
+//   const contacts = await Contact.find({
+//     $or: [{ owner: req.user.id }, { owner: req.user.id, role: 'admin' }]
 //   });
+//   res.json(contacts);
+// });
 
-//   // Delete Contact (Only owner or admin)
-//   app.delete("/contacts/:id", checkAuth, async (req, res) => {
-//     const contact = await Contact.findById(req.params.id);
-//     if (!contact) return res.status(404).json({ error: "Contact not found" });
-//     if (contact.owner.toString() !== req.user.id && req.user.role !== "admin") {
-//       return res.status(403).json({ error: "Not authorized" });
-//     }
-//     await contact.deleteOne();
-//     res.json({ message: "Contact deleted" });
-//   });
+// // Get Single Contact (Only owner or admin)
+// app.get('/contacts/:id', checkAuth, async (req, res) => {
+//   const contact = await Contact.findById(req.params.id);
+//   if (!contact) return res.status(404).json({ error: 'Contact not found' });
+//   if (contact.owner.toString() !== req.user.id && req.user.role !== 'admin') {
+//     return res.status(403).json({ error: 'Not authorized' });
+//   }
+//   res.json(contact);
+// });
+
+// // Update Contact (Only owner or admin)
+// app.put('/contacts/:id', checkAuth, async (req, res) => {
+//   const contact = await Contact.findById(req.params.id);
+//   if (!contact) return res.status(404).json({ error: 'Contact not found' });
+//   if (contact.owner.toString() !== req.user.id && req.user.role !== 'admin') {
+//     return res.status(403).json({ error: 'Not authorized' });
+//   }
+//   Object.assign(contact, req.body);
+//   await contact.save();
+//   res.json(contact);
+// });
+
+// // Delete Contact (Only owner or admin)
+// app.delete('/contacts/:id', checkAuth, async (req, res) => {
+//   const contact = await Contact.findById(req.params.id);
+//   if (!contact) return res.status(404).json({ error: 'Contact not found' });
+//   if (contact.owner.toString() !== req.user.id && req.user.role !== 'admin') {
+//     return res.status(403).json({ error: 'Not authorized' });
+//   }
+//   await contact.deleteOne();
+//   res.json({ message: 'Contact deleted' });
+// });
 
 module.exports = {
   addContact
