@@ -63,13 +63,21 @@ const addContact = async (req, res) => {
   }
 };
 
-// // Get All Contacts
-// app.get('/contacts', checkAuth, async (req, res) => {
-//   const contacts = await Contact.find({
-//     $or: [{ owner: req.user.id }, { owner: req.user.id, role: 'admin' }]
-//   });
-//   res.json(contacts);
-// });
+// Get All Contacts
+const getAllContacts = async (req, res) => {
+  try {
+    const contacts = await Contact.find({})
+      .select('-__v -imgId -imgUrl -updatedAt -createdAt')
+      .populate({ path: 'owner', select: 'fullname email' });
+
+    res.status(200).json(contacts);
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      error: `Internal server error - ${err.message}`
+    });
+  }
+};
 
 // // Get Single Contact (Only owner or admin)
 // app.get('/contacts/:id', checkAuth, async (req, res) => {
@@ -105,5 +113,6 @@ const addContact = async (req, res) => {
 // });
 
 module.exports = {
-  addContact
+  addContact,
+  getAllContacts
 };
