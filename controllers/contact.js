@@ -79,15 +79,38 @@ const getAllContacts = async (req, res) => {
   }
 };
 
-// // Get Single Contact (Only owner or admin)
-// app.get('/contacts/:id', checkAuth, async (req, res) => {
-//   const contact = await Contact.findById(req.params.id);
-//   if (!contact) return res.status(404).json({ error: 'Contact not found' });
-//   if (contact.owner.toString() !== req.user.id && req.user.role !== 'admin') {
-//     return res.status(403).json({ error: 'Not authorized' });
-//   }
-//   res.json(contact);
-// });
+// Get Single Contact
+const getContact = async (req, res) => {
+  try {
+    const contactId = req.params.id;
+
+    const contact = await Contact.findById(contactId)
+      .select('-__v -imgId -updatedAt -createdAt')
+      .populate({ path: 'owner', select: 'fullname email' });
+
+    if (!contact)
+      return res
+        .status(404)
+        .json({ success: false, error: 'Contact not found' });
+
+    if (
+      contact.owner._id.toString() !== req.user.id &&
+      req.user.role !== 'admin'
+    ) {
+      return res.status(403).json({
+        success: false,
+        error: 'Not authorized. Access denied'
+      });
+    }
+
+    res.status(200).json(contact);
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      error: `Internal server error - ${err.message}`
+    });
+  }
+};
 
 // // Update Contact (Only owner or admin)
 // app.put('/contacts/:id', checkAuth, async (req, res) => {
@@ -114,5 +137,6 @@ const getAllContacts = async (req, res) => {
 
 module.exports = {
   addContact,
-  getAllContacts
+  getAllContacts,
+  getContact
 };
