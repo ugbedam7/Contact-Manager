@@ -1,9 +1,10 @@
 const express = require('express');
-const { addContact } = require('../controllers/contact');
-const { checkAuth } = require('../middleware/authCheck');
 const { Router } = express;
 const router = Router();
+const { addContact } = require('../controllers/contact');
+const { isAuthenticated } = require('../middleware/authCheck');
+const { upload } = require('../middleware/upload');
 
-router.post('/', checkAuth, addContact);
+router.post('/', isAuthenticated, upload.single('image'), addContact);
 
 module.exports = router;
