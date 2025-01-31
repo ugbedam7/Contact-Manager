@@ -11,20 +11,20 @@ const transporter = nodemailer.createTransport({
   debug: true
 });
 
-const addContactEmail = async ({ email }) => {
+const addContactEmail = async (email) => {
   // Send OTP
   const mailOptions = {
     from: 'clickviralng@gmail.com',
     to: email,
     subject: 'New Contact Added',
-    text: `Be notified that your contact details have been added`
+    html: `<p style="font-size: 18px"><strong>Be notified</strong> that your contact details have been added.</p>`
   };
 
   try {
     await transporter.sendMail(mailOptions);
     return { message: 'New contact notification sent to your email' };
   } catch (err) {
-    throw new Error('Error adding contact: ' + err.message);
+    throw new Error('Error sending email: ' + err.message);
   }
 };
 
