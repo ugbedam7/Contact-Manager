@@ -93,10 +93,7 @@ const getContact = async (req, res) => {
         .status(404)
         .json({ success: false, error: 'Contact not found' });
 
-    if (
-      contact.owner._id.toString() !== req.user.id &&
-      req.user.role !== 'admin'
-    ) {
+    if (contact.owner._id.toString() !== req.user.id) {
       return res.status(403).json({
         success: false,
         error: 'Not authorized. Access denied'
@@ -125,7 +122,7 @@ const updateContact = async (req, res) => {
         .status(404)
         .json({ success: false, error: 'Contact not found' });
 
-    if (contact.owner.toString() !== req.user.id && req.user.role !== 'admin')
+    if (contact.owner.toString() !== req.user.id)
       return res.status(403).json({
         success: false,
         error: 'Not authorized. Access denied'
@@ -157,7 +154,7 @@ const deleteContact = async (req, res) => {
         .status(404)
         .json({ success: false, error: 'Contact not found' });
 
-    if (contact.owner.toString() !== req.user.id && req.user.role !== 'admin') {
+    if (contact.owner.toString() !== req.user.id) {
       return res.status(403).json({
         success: false,
         error: 'Not authorized. Access denied'

@@ -8,13 +8,13 @@ const {
   updateContact,
   deleteContact
 } = require('../controllers/contact');
-const { isAuthenticated } = require('../middleware/authCheck');
+const { isAuthenticated, isAdmin } = require('../middleware/authCheck');
 const { upload } = require('../middleware/upload');
 
-router.post('/', isAuthenticated, upload.single('image'), addContact);
+router.post('/', upload.single('image'), isAuthenticated, addContact);
 router.get('/', isAuthenticated, getAllContacts);
-router.get('/:id', isAuthenticated, getContact);
-router.put('/:id', isAuthenticated, upload.none(), updateContact);
-router.delete('/:id', isAuthenticated, deleteContact);
+router.get('/:id', isAuthenticated, isAdmin, getContact);
+router.put('/:id', upload.none(), isAuthenticated, isAdmin, updateContact);
+router.delete('/:id', isAuthenticated, isAdmin, deleteContact);
 
 module.exports = router;
