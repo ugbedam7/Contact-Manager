@@ -1,6 +1,6 @@
-const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { hashPassword, comparePassword } = require('../utils/authHasher');
+const { generateToken } = require('../utils/generateToken');
 
 // @Desc Register a new user
 // @Route POST /api/auth/register
@@ -75,7 +75,7 @@ const loginUser = async (req, res) => {
     if (!user) {
       return res.status(400).json({
         success: false,
-        error: 'User not found'
+        error: 'Invalid credentials'
       });
     }
 
@@ -88,30 +88,14 @@ const loginUser = async (req, res) => {
       });
     }
 
-    // Create bearer token
-    accessToken = jwt.sign(
-      {
-        userId: user._id,
-        email: user.email,
-        role: user.role
-      },
-      process.env.JWT_SECRET_KEY,
-      {
-        expiresIn: '1h'
-      }
-    );
+    // Generate a token
+    const accessToken = generateToken(user._id, user.email, user.role);
 
-    res
-      .cookie('token', accessToken, {
-        maxAge: 3600000, // 1 hour
-        signed: false
-      })
-      .status(200)
-      .json({
-        success: true,
-        message: 'User Login successfull',
-        accessToken
-      });
+    res.status(200).json({
+      success: true,
+      message: 'User Login successfull',
+      accessToken
+    });
   } catch (err) {
     res.status(500).json({
       success: false,
