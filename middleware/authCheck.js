@@ -6,7 +6,7 @@ const isAuthenticated = (req, res, next) => {
 
   if (!token)
     return res.status(401).json({
-      sucess: false,
+      success: false,
       error: 'Access denied. No token provided'
     });
 
@@ -19,7 +19,7 @@ const isAuthenticated = (req, res, next) => {
     if (err.name === 'TokenExpiredError') {
       return res
         .status(401)
-        .json({ error: 'Token has expired. Please log in again.' });
+        .json({ error: 'Token expired. Please log in.' });
     }
     res.status(400).json({ error: 'Invalid token' });
   }
