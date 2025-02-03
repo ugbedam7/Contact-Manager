@@ -6,6 +6,7 @@ const ContactSchema = new Schema(
     name: String,
     email: String,
     phone: String,
+    address:String,
 
     imgUrl: {
       type: String,
