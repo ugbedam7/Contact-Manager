@@ -7,12 +7,12 @@ const addContactEmail = require('../utils/email');
 const addContact = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { name, email, phone } = req.body;
+    const { name, email, phone, address } = req.body;
 
-    if (!name || !email || !phone) {
+    if (!name || !email || !phone || !address) {
       return res.status(400).json({
         success: false,
-        error: 'Please provide name, email and phone'
+        error: 'Please provide missing fields'
       });
     }
 
@@ -21,7 +21,7 @@ const addContact = async (req, res) => {
 
     if (!file) {
       return res.status(400).json({
-        sucess: false,
+        success: false,
         error: 'No file uploaded'
       });
     }
@@ -42,6 +42,7 @@ const addContact = async (req, res) => {
       name,
       email,
       phone,
+      address,
       owner: userId,
       imgUrl: url,
       imgId: publicId
@@ -58,7 +59,7 @@ const addContact = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       success: false,
-      error: `Internal server error - ${err.message}`
+      error: `${err.message}`
     });
   }
 };
@@ -67,14 +68,15 @@ const addContact = async (req, res) => {
 const getAllContacts = async (req, res) => {
   try {
     const contacts = await Contact.find({})
-      .select('-__v -imgId -imgUrl -updatedAt -createdAt')
+      .select('-__v -imgId -updatedAt -createdAt')
       .populate({ path: 'owner', select: 'fullname email' });
+
 
     res.status(200).json(contacts);
   } catch (err) {
     res.status(500).json({
       success: false,
-      error: `Internal server error - ${err.message}`
+      error: `${err.message}`
     });
   }
 };
@@ -104,7 +106,7 @@ const getContact = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       success: false,
-      error: `Internal server error - ${err.message}`
+      error: `${err.message}`
     });
   }
 };
@@ -113,32 +115,32 @@ const getContact = async (req, res) => {
 const updateContact = async (req, res) => {
   try {
     const contactId = req.params.id;
-    const contact = await Contact.findById(contactId);
 
-    console.log(req.body);
+    const contact = await Contact.findById(contactId);
 
     if (!contact)
       return res
         .status(404)
         .json({ success: false, error: 'Contact not found' });
 
-    if (contact.owner.toString() !== req.user.id)
+    if (contact.owner._id.toString() !== req.user.id && req.user.role !== 'admin')
       return res.status(403).json({
         success: false,
         error: 'Not authorized. Access denied'
       });
 
     Object.assign(contact, req.body);
-    await contact.save();
+    const updatedContact = await contact.save();
 
     res.status(200).json({
       success: true,
-      message: 'Contact updated'
+      message: 'Contact Updated',
+      updatedContact
     });
   } catch (err) {
     res.status(500).json({
       success: false,
-      error: `Internal server error - ${err.message}`
+      error: `${err.message}`
     });
   }
 };
@@ -154,7 +156,7 @@ const deleteContact = async (req, res) => {
         .status(404)
         .json({ success: false, error: 'Contact not found' });
 
-    if (contact.owner.toString() !== req.user.id) {
+    if (contact.owner._id.toString() !== req.user.id && req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
         error: 'Not authorized. Access denied'
@@ -165,12 +167,12 @@ const deleteContact = async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Contact deleted'
+      message: 'Contact Deleted'
     });
   } catch (err) {
     res.status(500).json({
       success: false,
-      error: `Internal server error - ${err.message}`
+      error: `${err.message}`
     });
   }
 };
