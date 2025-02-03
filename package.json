@@ -1,10 +1,11 @@
 {
   "name": "contact-manager-backend",
   "version": "1.0.0",
-  "description": "Backend code for a contact management application",
+  "description": "Backend for a contact management application",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon server.js"
+    "dev": "node --watch server.js",
+    "start": "node server.js"
   },
   "author": "Damian Oguche",
   "license": "ISC",
