@@ -4,7 +4,7 @@ const User = require('../models/user');
 const addContactEmail = require('../utils/email');
 
 // Add Contact
-const addContact = async (req, res) => {
+const createContact = async (req, res) => {
   try {
     const userId = req.user.id;
     const { name, email, phone, address } = req.body;
@@ -65,12 +65,38 @@ const addContact = async (req, res) => {
 };
 
 // Get All Contacts
-const getAllContacts = async (req, res) => {
+const getContacts = async (req, res) => {
   try {
     const contacts = await Contact.find({})
       .select('-__v -imgId -updatedAt -createdAt')
       .populate({ path: 'owner', select: 'fullname email' });
 
+    res.status(200).json(contacts);
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      error: `${err.message}`
+    });
+  }
+};
+
+// Get All Query Contacts
+const getQueryContacts = async (req, res) => {
+  try {
+    const searchQuery = req.query.search;
+    console.log(searchQuery);
+    let contacts;
+
+    if (!searchQuery) {
+      contacts = [];
+      return res
+        .status(400)
+        .json({ success: false, error: 'Search item is required' });
+    }
+
+    contacts = await Contact.find({
+      name: { $regex: searchQuery, $options: 'i' }
+    });
 
     res.status(200).json(contacts);
   } catch (err) {
@@ -123,7 +149,10 @@ const updateContact = async (req, res) => {
         .status(404)
         .json({ success: false, error: 'Contact not found' });
 
-    if (contact.owner._id.toString() !== req.user.id && req.user.role !== 'admin')
+    if (
+      contact.owner._id.toString() !== req.user.id &&
+      req.user.role !== 'admin'
+    )
       return res.status(403).json({
         success: false,
         error: 'Not authorized. Access denied'
@@ -156,7 +185,10 @@ const deleteContact = async (req, res) => {
         .status(404)
         .json({ success: false, error: 'Contact not found' });
 
-    if (contact.owner._id.toString() !== req.user.id && req.user.role !== 'admin') {
+    if (
+      contact.owner._id.toString() !== req.user.id &&
+      req.user.role !== 'admin'
+    ) {
       return res.status(403).json({
         success: false,
         error: 'Not authorized. Access denied'
@@ -178,8 +210,9 @@ const deleteContact = async (req, res) => {
 };
 
 module.exports = {
-  addContact,
-  getAllContacts,
+  createContact,
+  getContacts,
+  getQueryContacts,
   getContact,
   updateContact,
   deleteContact

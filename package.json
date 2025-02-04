@@ -4,7 +4,7 @@
   "description": "Backend for a contact management application",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "dev": "nodemon server.js"
   },
   "author": "Damian Oguche",
   "license": "ISC",
