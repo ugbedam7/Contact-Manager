@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 5000;
 
 // CORS Options definition
 const corsOptions = {
-  origin: ['https://contact-app-fe.netlify.app'],
+  origin: ['https://contact-app-fe.netlify.app', 'http://localhost:5173'],
 
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
   allowedHeaders: [

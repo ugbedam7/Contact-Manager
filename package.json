@@ -4,7 +4,6 @@
   "description": "Backend for a contact management application",
   "main": "server.js",
   "scripts": {
-    "dev": "node --watch server.js",
     "start": "node server.js"
   },
   "author": "Damian Oguche",
