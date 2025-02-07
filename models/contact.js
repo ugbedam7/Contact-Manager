@@ -7,6 +7,7 @@ const ContactSchema = new Schema(
     email: String,
     phone: String,
     address:String,
+    xhandle:String,
 
     imgUrl: {
       type: String,
