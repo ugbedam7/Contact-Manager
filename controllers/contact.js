@@ -9,7 +9,7 @@ const createContact = async (req, res) => {
     const userId = req.user.id;
     const { name, email, phone, address } = req.body;
 
-    if (!name || !email || !phone || !address) {
+    if (!name || !email || !phone || !address ||xhandle) {
       return res.status(400).json({
         success: false,
         error: 'Please provide missing fields'
@@ -43,6 +43,7 @@ const createContact = async (req, res) => {
       email,
       phone,
       address,
+      xhandle,
       owner: userId,
       imgUrl: url,
       imgId: publicId
@@ -120,13 +121,6 @@ const getContact = async (req, res) => {
       return res
         .status(404)
         .json({ success: false, error: 'Contact not found' });
-
-    if (contact.owner._id.toString() !== req.user.id) {
-      return res.status(403).json({
-        success: false,
-        error: 'Not authorized. Access denied'
-      });
-    }
 
     res.status(200).json(contact);
   } catch (err) {
