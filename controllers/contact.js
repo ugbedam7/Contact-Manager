@@ -1,18 +1,18 @@
-const { uploadImage } = require('../helper/cloudinary');
-const Contact = require('../models/contact');
-const User = require('../models/user');
-const addContactEmail = require('../utils/email');
+const { uploadImage } = require("../helper/cloudinary");
+const Contact = require("../models/contact");
+const User = require("../models/user");
+const addContactEmail = require("../utils/email");
 
 // Add Contact
 const createContact = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { name, email, phone, address } = req.body;
+    const { name, email, phone, address, xhandle } = req.body;
 
-    if (!name || !email || !phone || !address ||xhandle) {
+    if (!name || !email || !phone || !address || !xhandle) {
       return res.status(400).json({
         success: false,
-        error: 'Please provide missing fields'
+        error: "Please provide missing fields",
       });
     }
 
@@ -22,7 +22,7 @@ const createContact = async (req, res) => {
     if (!file) {
       return res.status(400).json({
         success: false,
-        error: 'No file uploaded'
+        error: "No file uploaded",
       });
     }
 
@@ -31,7 +31,7 @@ const createContact = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        error: 'User not found'
+        error: "User not found",
       });
     }
 
@@ -46,7 +46,7 @@ const createContact = async (req, res) => {
       xhandle,
       owner: userId,
       imgUrl: url,
-      imgId: publicId
+      imgId: publicId,
     });
 
     // Send Email Notification
@@ -54,13 +54,13 @@ const createContact = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: 'Contact Added successfully',
-      contact
+      message: "Contact Added successfully",
+      contact,
     });
   } catch (err) {
     res.status(500).json({
       success: false,
-      error: `${err.message}`
+      error: `${err.message}`,
     });
   }
 };
@@ -69,14 +69,14 @@ const createContact = async (req, res) => {
 const getContacts = async (req, res) => {
   try {
     const contacts = await Contact.find({})
-      .select('-__v -imgId -updatedAt -createdAt')
-      .populate({ path: 'owner', select: 'fullname email' });
+      .select("-__v -imgId -updatedAt -createdAt")
+      .populate({ path: "owner", select: "fullname email" });
 
     res.status(200).json(contacts);
   } catch (err) {
     res.status(500).json({
       success: false,
-      error: `${err.message}`
+      error: `${err.message}`,
     });
   }
 };
@@ -92,18 +92,18 @@ const getQueryContacts = async (req, res) => {
       contacts = [];
       return res
         .status(400)
-        .json({ success: false, error: 'Search item is required' });
+        .json({ success: false, error: "Search item is required" });
     }
 
     contacts = await Contact.find({
-      name: { $regex: searchQuery, $options: 'i' }
+      name: { $regex: searchQuery, $options: "i" },
     });
 
     res.status(200).json(contacts);
   } catch (err) {
     res.status(500).json({
       success: false,
-      error: `${err.message}`
+      error: `${err.message}`,
     });
   }
 };
@@ -114,19 +114,19 @@ const getContact = async (req, res) => {
     const contactId = req.params.id;
 
     const contact = await Contact.findById(contactId)
-      .select('-__v -imgId -updatedAt -createdAt')
-      .populate({ path: 'owner', select: 'fullname email' });
+      .select("-__v -imgId -updatedAt -createdAt")
+      .populate({ path: "owner", select: "fullname email" });
 
     if (!contact)
       return res
         .status(404)
-        .json({ success: false, error: 'Contact not found' });
+        .json({ success: false, error: "Contact not found" });
 
     res.status(200).json(contact);
   } catch (err) {
     res.status(500).json({
       success: false,
-      error: `${err.message}`
+      error: `${err.message}`,
     });
   }
 };
@@ -141,15 +141,15 @@ const updateContact = async (req, res) => {
     if (!contact)
       return res
         .status(404)
-        .json({ success: false, error: 'Contact not found' });
+        .json({ success: false, error: "Contact not found" });
 
     if (
       contact.owner._id.toString() !== req.user.id &&
-      req.user.role !== 'admin'
+      req.user.role !== "admin"
     )
       return res.status(403).json({
         success: false,
-        error: 'Not authorized. Access denied'
+        error: "Not authorized. Access denied",
       });
 
     Object.assign(contact, req.body);
@@ -157,13 +157,13 @@ const updateContact = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: 'Contact Updated',
-      updatedContact
+      message: "Contact Updated",
+      updatedContact,
     });
   } catch (err) {
     res.status(500).json({
       success: false,
-      error: `${err.message}`
+      error: `${err.message}`,
     });
   }
 };
@@ -177,15 +177,15 @@ const deleteContact = async (req, res) => {
     if (!contact)
       return res
         .status(404)
-        .json({ success: false, error: 'Contact not found' });
+        .json({ success: false, error: "Contact not found" });
 
     if (
       contact.owner._id.toString() !== req.user.id &&
-      req.user.role !== 'admin'
+      req.user.role !== "admin"
     ) {
       return res.status(403).json({
         success: false,
-        error: 'Not authorized. Access denied'
+        error: "Not authorized. Access denied",
       });
     }
 
@@ -193,12 +193,12 @@ const deleteContact = async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Contact Deleted'
+      message: "Contact Deleted",
     });
   } catch (err) {
     res.status(500).json({
       success: false,
-      error: `${err.message}`
+      error: `${err.message}`,
     });
   }
 };
@@ -209,5 +209,5 @@ module.exports = {
   getQueryContacts,
   getContact,
   updateContact,
-  deleteContact
+  deleteContact,
 };
