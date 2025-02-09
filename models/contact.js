@@ -1,13 +1,24 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const ContactSchema = new Schema(
   {
-    name: String,
-    email: String,
+    fullname: String,
+
+    email: {
+      type: String,
+      unique: true,
+      required: true
+    },
+
     phone: String,
-    address:String,
-    xhandle:String,
+    address: String,
+
+    xhandle: {
+      type: String,
+      unique: true,
+      required: true
+    },
 
     imgUrl: {
       type: String,
@@ -21,7 +32,7 @@ const ContactSchema = new Schema(
 
     owner: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true
     }
   },
@@ -30,6 +41,6 @@ const ContactSchema = new Schema(
   }
 );
 
-const Contact = mongoose.model('Contact', ContactSchema);
+const Contact = mongoose.model("Contact", ContactSchema);
 
 module.exports = Contact;
