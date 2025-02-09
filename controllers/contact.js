@@ -1,4 +1,4 @@
-const { uploadImage } = require("../helper/cloudinary");
+const { uploadImage, deleteImage } = require("../helper/cloudinary");
 const Contact = require("../models/contact");
 const addContactEmail = require("../utils/email");
 const fs = require("fs");
@@ -146,7 +146,6 @@ const getContact = async (req, res) => {
 const updateContact = async (req, res) => {
   try {
     const contactId = req.params.id;
-
     const contact = await Contact.findById(contactId);
 
     if (!contact)
@@ -201,6 +200,9 @@ const deleteContact = async (req, res) => {
     }
 
     await contact.deleteOne();
+
+    // Delete image from cloudinary
+    await deleteImage(contact.imgId);
 
     res.json({
       success: true,

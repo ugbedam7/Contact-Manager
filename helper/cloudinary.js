@@ -1,4 +1,4 @@
-const cloudinary = require('../config/cloudinary');
+const cloudinary = require("../config/cloudinary");
 
 /** uploadImage function expects a file path not the file's binary content.
 * 1. The cloudinary.uploader.upload() method requires the path to the file
@@ -10,7 +10,7 @@ const cloudinary = require('../config/cloudinary');
 const uploadImage = async (filePath) => {
   try {
     const result = await cloudinary.uploader.upload(filePath, {
-      folder: 'Contact-Images'
+      folder: "Contact-Images"
     });
 
     return {
@@ -23,4 +23,11 @@ const uploadImage = async (filePath) => {
   }
 };
 
-module.exports = { uploadImage };
+const deleteImage = async (cloudinaryId) => {
+  await cloudinary.uploader.destroy(cloudinaryId);
+};
+
+module.exports = {
+  uploadImage,
+  deleteImage
+};
