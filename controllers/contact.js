@@ -1,67 +1,78 @@
 const { uploadImage } = require("../helper/cloudinary");
 const Contact = require("../models/contact");
-const User = require("../models/user");
 const addContactEmail = require("../utils/email");
+const fs = require("fs");
 
 // Add Contact
 const createContact = async (req, res) => {
+  const userId = req.user.id;
+  let filePath = req.file ? req.file.path : null;
+
   try {
-    const userId = req.user.id;
-    const { name, email, phone, address, xhandle } = req.body;
+    const { fullname, email, phone, address, xhandle } = req.body;
 
-    if (!name || !email || !phone || !address || !xhandle) {
+    if (!fullname || !email || !phone || !address || !xhandle) {
       return res.status(400).json({
         success: false,
-        error: "Please provide missing fields",
+        error: "Please provide missing fields"
       });
     }
 
-    // Get the file object from the request object
-    const file = req.file;
+    // Check if the contact already exists
+    const existingContact = await Contact.findOne({
+      $or: [{ email }, { xhandle }]
+    });
 
-    if (!file) {
+    if (existingContact) {
+      const takenField = existingContact.email === email ? "Email" : "Xhandle";
       return res.status(400).json({
         success: false,
-        error: "No file uploaded",
+        error: `${takenField} already exists`
       });
     }
 
-    const user = await User.findById(userId);
-
-    if (!user) {
-      return res.status(404).json({
+    if (!req.file) {
+      return res.status(400).json({
         success: false,
-        error: "User not found",
+        error: "No file uploaded"
       });
     }
 
     // Pass the path property of the file object to uploadImage
-    const { url, publicId } = await uploadImage(file.path);
+    const { url, publicId } = await uploadImage(filePath);
 
-    const contact = await Contact.create({
-      name,
+    const newContact = await Contact.create({
+      fullname,
       email,
       phone,
       address,
       xhandle,
       owner: userId,
       imgUrl: url,
-      imgId: publicId,
+      imgId: publicId
     });
 
     // Send Email Notification
-    await addContactEmail(user.email);
+    await addContactEmail(newContact.email);
 
     res.status(201).json({
       success: true,
       message: "Contact Added successfully",
-      contact,
+      newContact
     });
   } catch (err) {
+    console.log(err.message);
     res.status(500).json({
       success: false,
-      error: `${err.message}`,
+      error: `${err.message}`
     });
+  } finally {
+    // Ensure file is deleted even if an error occurs
+    if (filePath) {
+      fs.unlink(filePath, (err) => {
+        if (err) console.error("Error deleting file:", err);
+      });
+    }
   }
 };
 
@@ -76,7 +87,7 @@ const getContacts = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       success: false,
-      error: `${err.message}`,
+      error: `${err.message}`
     });
   }
 };
@@ -96,14 +107,14 @@ const getQueryContacts = async (req, res) => {
     }
 
     contacts = await Contact.find({
-      name: { $regex: searchQuery, $options: "i" },
+      name: { $regex: searchQuery, $options: "i" }
     });
 
     res.status(200).json(contacts);
   } catch (err) {
     res.status(500).json({
       success: false,
-      error: `${err.message}`,
+      error: `${err.message}`
     });
   }
 };
@@ -126,7 +137,7 @@ const getContact = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       success: false,
-      error: `${err.message}`,
+      error: `${err.message}`
     });
   }
 };
@@ -149,7 +160,7 @@ const updateContact = async (req, res) => {
     )
       return res.status(403).json({
         success: false,
-        error: "Not authorized. Access denied",
+        error: "Not authorized. Access denied"
       });
 
     Object.assign(contact, req.body);
@@ -158,12 +169,12 @@ const updateContact = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Contact Updated",
-      updatedContact,
+      updatedContact
     });
   } catch (err) {
     res.status(500).json({
       success: false,
-      error: `${err.message}`,
+      error: `${err.message}`
     });
   }
 };
@@ -185,7 +196,7 @@ const deleteContact = async (req, res) => {
     ) {
       return res.status(403).json({
         success: false,
-        error: "Not authorized. Access denied",
+        error: "Not authorized. Access denied"
       });
     }
 
@@ -193,12 +204,12 @@ const deleteContact = async (req, res) => {
 
     res.json({
       success: true,
-      message: "Contact Deleted",
+      message: "Contact Deleted"
     });
   } catch (err) {
     res.status(500).json({
       success: false,
-      error: `${err.message}`,
+      error: `${err.message}`
     });
   }
 };
@@ -209,5 +220,5 @@ module.exports = {
   getQueryContacts,
   getContact,
   updateContact,
-  deleteContact,
+  deleteContact
 };
