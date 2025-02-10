@@ -70,3 +70,14 @@ DELETE /api/contacts/{id} – Delete a contact (Only owner or Admin).
   - Only the owner or an admin can edit/delete contact details.
 
 - **Admin Privileges**: Use admin credentials to delete or modify any user or contact.
+
+# Technologies Used
+
+## Backend
+
+- Proramming Language: JavaScript
+- Framework: Express JS - For building high-performance APIs
+- Authentication: JWT (JSON Web Token) for user authentication
+- Database: Mongo DB - No SQL database for storing application data
+- ORM: Mongoose - For database interactions
+- API Documentation: POSTMAN - Auto-generated API documentation
