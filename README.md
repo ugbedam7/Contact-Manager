@@ -60,12 +60,13 @@ DELETE /api/contacts/{id} – Delete a contact (Only owner or Admin).
    }
 ```
 
-Fetching Contacts: Call GET /api/contacts to get all contacts or GET /api/contacts/{id} for a specific one.
-Modifying Contacts:
-Use PUT /api/contacts/{id} with the updated contact data.
-Only the owner or an admin can edit/delete a contact.
-Admin Privileges: Use admin credentials to delete or modify any user or contact.
+- Fetching Contact(s): Send a GET request to `/api/contacts` to get all
+  contacts or a GET request to `/api/contacts/{id}` for a specific one.
 
-```
+- Modifying Contacts:
 
-```
+  - Send a PUT request `/api/contacts/{id}` to update a contact data.
+  - Send a PATCH request `/api/contacts/{id}` to update contact image.
+  - Only the owner or an admin can edit/delete contact details.
+
+- Admin Privileges: Use admin credentials to delete or modify any user or contact.
