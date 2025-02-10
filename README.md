@@ -48,9 +48,19 @@ DELETE /api/contacts/{id} – Delete a contact (Only owner or Admin).
 - Authentication: User obtains a JWT token via `/api/auth/login`, then
   include it in requests as Authorization: Bearer `<token>`.
 
-- Creating a Contact: Send a POST request to /api/contacts with a JSON body { "name": "John Doe", "phone": "1234567890", "email": "john@example.com" }.
+- Creating a Contact: Send a POST request to `/api/contacts` with a JSON or formData body
+
+  ````{
+      "fullname": "John Doe",
+      "phone": "1234567890",
+      "email": "john@example.com" ,
+      "xhandle": "@johndoe",
+      "address": "#45 Park Avenue, New Yok USA"
+   }```
+
   Fetching Contacts: Call GET /api/contacts to get all contacts or GET /api/contacts/{id} for a specific one.
   Modifying Contacts:
   Use PUT /api/contacts/{id} with the updated contact data.
   Only the owner or an admin can edit/delete a contact.
   Admin Privileges: Use admin credentials to delete or modify any user or contact.
+  ````
