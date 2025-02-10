@@ -32,10 +32,10 @@ DELETE /api/contacts/{id} – Delete a contact (Only owner or Admin).
 
 ## 2. API Documentation
 
-- Authentication: Uses JWT for secure user sessions.
-- Authorization: Users can only modify their own contacts. Admins have full
+- **Authentication**: Uses JWT for secure user sessions.
+- **Authorization**: Users can only modify their own contacts. Admins have full
   access.
-- Responses:
+- **Responses**:
   - 200 OK – Successful operation.
   - 201 Created – New resource successfully created.
   - 400 Bad Request – Invalid input data.
@@ -45,10 +45,10 @@ DELETE /api/contacts/{id} – Delete a contact (Only owner or Admin).
 
 ## 3. Instructions for Consuming the Endpoints
 
-- Authentication: User obtains a JWT token via `/api/auth/login`, then
+- **Authentication**: User obtains a JWT token via `/api/auth/login`, then
   include it in requests as Authorization: Bearer `<token>`.
 
-- Creating a Contact: Send a POST request to `/api/contacts` with a JSON or formData body
+- **Creating a Contact**: Send a POST request to `/api/contacts` with a JSON or formData body
 
 ```
   {
@@ -60,13 +60,13 @@ DELETE /api/contacts/{id} – Delete a contact (Only owner or Admin).
    }
 ```
 
-- Fetching Contact(s): Send a GET request to `/api/contacts` to get all
+- **Fetching Contact(s)**: Send a GET request to `/api/contacts` to get all
   contacts or a GET request to `/api/contacts/{id}` for a specific one.
 
-- Modifying Contacts:
+- **Modifying Contacts**:
 
   - Send a PUT request `/api/contacts/{id}` to update a contact data.
   - Send a PATCH request `/api/contacts/{id}` to update contact image.
   - Only the owner or an admin can edit/delete contact details.
 
-- Admin Privileges: Use admin credentials to delete or modify any user or contact.
+- **Admin Privileges**: Use admin credentials to delete or modify any user or contact.
