@@ -81,3 +81,11 @@ DELETE /api/contacts/{id} – Delete a contact (Only owner or Admin).
 - **Database: Mongo DB** - No SQL database for storing application data
 - **ORM: Mongoose** - For database interactions
 - **API Documentation**: POSTMAN - Auto-generated API documentation
+
+## Other Tools & Utilities
+
+- **Version Control: Git & GitHub** - For managing source code
+- **Linting & Formatting**: ESLint, Prettier (Frontend) & (Backend) Ensures
+  code quality
+- **Package Management**: npm (Frontend) & (Backend) - For dependency
+  management
