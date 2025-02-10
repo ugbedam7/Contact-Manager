@@ -45,7 +45,7 @@ DELETE /api/contacts/{id} – Delete a contact (Only owner or Admin).
 
 ## 3. Instructions for Consuming the Endpoints
 
-- Authentication: User obtains a JWT token via `http /api/auth/login`, then
+- Authentication: User obtains a JWT token via `/api/auth/login`, then
   include it in requests as Authorization: Bearer `<token>`.
 
 - Creating a Contact: Send a POST request to /api/contacts with a JSON body { "name": "John Doe", "phone": "1234567890", "email": "john@example.com" }.
