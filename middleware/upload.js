@@ -17,7 +17,7 @@ const upload = multer({ storage });
 
 module.exports = { upload };
 
-// ********DISK STORAGE CONFIGURATION*********
+// ********DISK STORAGE CONFIGURATION*******
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
@@ -62,7 +62,7 @@ module.exports = {
   upload2
 };
 
-// *********MEMORY STORAGE CONFIGURATION************
+// *********MEMORY STORAGE CONFIGURATION*********
 const multer = require("multer");
 const path = require("path");
 
