@@ -1,4 +1,4 @@
-# Contact Manager App Backend Documentation
+# Contact Manager App Backend
 
 ## 1. Endpoint Descriptions
 
