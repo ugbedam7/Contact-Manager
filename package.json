@@ -4,6 +4,7 @@
   "description": "Backend for a contact management application",
   "main": "server.js",
   "scripts": {
+    "preinstall": "npm config set legacy-peer-deps true",
     "dev": "nodemon server.js"
   },
   "author": "Damian Oguche",
