@@ -178,6 +178,69 @@ const updateContact = async (req, res) => {
   }
 };
 
+// Update Contact Image
+const updateContactImage = async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({
+      success: false,
+      error: "No file uploaded"
+    });
+  }
+
+  const filePath = req.file.path;
+  const contactId = req.params.id;
+
+  try {
+    let contact = await Contact.findById(contactId);
+
+    if (!contact)
+      return res.status(404).json({
+        success: false,
+        error: "Contact not found"
+      });
+
+    if (
+      String(contact.owner._id) !== String(req.user.id) &&
+      req.user.role !== "admin"
+    )
+      return res.status(403).json({
+        success: false,
+        error: "Not authorized. Access denied"
+      });
+
+    // Contact Image Update
+    if (contact.imgId) {
+      // Delete existing image from Cloudinary if exists
+      const deleteResult = await deleteImage(contact.imgId);
+    }
+    // Upload new image
+    const { url, publicId } = await uploadImage(filePath);
+
+    // Update database
+    contact.imgUrl = url;
+    contact.imgId = publicId;
+
+    contact = await contact.save({ validateModifiedOnly: true });
+
+    if (filePath) {
+      fs.unlink(filePath, (err) => {
+        if (err) console.error("Error deleting file:", err);
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Image updated",
+      contact
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      error: err.message
+    });
+  }
+};
+
 // Delete Contact
 const deleteContact = async (req, res) => {
   try {
@@ -222,5 +285,6 @@ module.exports = {
   getQueryContacts,
   getContact,
   updateContact,
+  updateContactImage,
   deleteContact
 };

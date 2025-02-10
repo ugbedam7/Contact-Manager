@@ -24,7 +24,17 @@ const uploadImage = async (filePath) => {
 };
 
 const deleteImage = async (cloudinaryId) => {
-  await cloudinary.uploader.destroy(cloudinaryId);
+  try {
+    const result = await cloudinary.uploader.destroy(cloudinaryId);
+
+    if (result.result !== "ok" && result.result !== "not found") {
+      throw new Error(`Failed to delete image: ${result.result}`);
+    }
+    return result;
+  } catch (err) {
+    console.log(err.message);
+    throw new Error(`${err.message}`);
+  }
 };
 
 module.exports = {
