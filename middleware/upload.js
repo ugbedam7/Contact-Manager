@@ -18,14 +18,14 @@ const upload = multer({ storage });
 module.exports = { upload };
 
 // ********DISK STORAGE CONFIGURATION*******
-const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
+const multer2 = require("multer");
+const path2 = require("path");
+const fs2 = require("fs");
 
 // Ensure uploads directory exists
 const uploadDir = path.join(__dirname, "uploads");
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
+if (!fs2.existsSync(uploadDir)) {
+  fs2.mkdirSync(uploadDir, { recursive: true });
 }
 
 // Set storage engine
@@ -50,7 +50,7 @@ const fileFilter2 = (req, file, cb) => {
 };
 
 // Multer Middleware
-const upload2 = multer({
+const upload2 = multer2({
   storage2,
   fileFilter2,
   limits: {
@@ -63,11 +63,11 @@ module.exports = {
 };
 
 // *********MEMORY STORAGE CONFIGURATION*********
-const multer = require("multer");
-const path = require("path");
+const multer3 = require("multer");
+const path3 = require("path");
 
 // Set up storage (memoryStorage for processing before upload)
-const storage3 = multer.memoryStorage();
+const storage3 = multer3.memoryStorage();
 
 const fileFilter3 = (req, file, cb) => {
   const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
@@ -81,7 +81,7 @@ const fileFilter3 = (req, file, cb) => {
   }
 };
 
-const upload3 = multer({
+const upload3 = multer3({
   storage3,
   fileFilter3,
   limits: { fileSize: 2 * 1024 * 1024 } // 2MB file size limit
