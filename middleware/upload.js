@@ -15,8 +15,6 @@ const storage = new CloudinaryStorage({
 // Initialize Multer
 const upload = multer({ storage });
 
-module.exports = { upload };
-
 // ********DISK STORAGE CONFIGURATION*******
 const multer2 = require("multer");
 const path2 = require("path");
@@ -58,10 +56,6 @@ const upload2 = multer2({
   }
 });
 
-module.exports = {
-  upload2
-};
-
 // *********MEMORY STORAGE CONFIGURATION*********
 const multer3 = require("multer");
 const path3 = require("path");
@@ -87,4 +81,8 @@ const upload3 = multer3({
   limits: { fileSize: 2 * 1024 * 1024 } // 2MB file size limit
 });
 
-module.exports = { upload3 };
+module.exports = {
+  upload,
+  upload2,
+  upload3
+};
