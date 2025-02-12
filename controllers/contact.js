@@ -10,9 +10,9 @@ const createContact = async (req, res) => {
   let filePath = req.file ? req.file.path : null;
 
   try {
-    const { fullname, email, phone, address, xhandle } = req.body;
+    const { firstname, lastname, email, phone, address, xhandle } = req.body;
 
-    if (!fullname || !email || !phone || !address || !xhandle) {
+    if (!firstname || !lastname || !email || !phone || !address || !xhandle) {
       return res.status(400).json({
         success: false,
         error: "Please provide missing fields"
@@ -43,7 +43,8 @@ const createContact = async (req, res) => {
     const { url, publicId } = await uploadImage(filePath);
 
     const newContact = await Contact.create({
-      fullname,
+      firstname,
+      lastname,
       email,
       phone,
       address,
