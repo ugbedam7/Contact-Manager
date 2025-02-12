@@ -1,5 +1,6 @@
 const { uploadImage, deleteImage } = require("../helper/cloudinary");
 const Contact = require("../models/contact");
+const User = require("../models/user");
 const addContactEmail = require("../utils/email");
 const fs = require("fs");
 
@@ -52,8 +53,15 @@ const createContact = async (req, res) => {
       imgId: publicId
     });
 
+    const user = await User.findById(userId);
+
+    if (!user) {
+      console.log("User not found");
+      return null;
+    }
+
     // Send Email Notification
-    await addContactEmail(newContact.email);
+    await addContactEmail(user.email);
 
     res.status(201).json({
       success: true,

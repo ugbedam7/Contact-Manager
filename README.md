@@ -241,7 +241,8 @@ Authorization: Bearer <token>
 ## Backend
 
 - **Proramming Language**: JavaScript
-- **Framework: Express JS** - For building high-performance APIs
+- **Framework: Express JS** - A minimal and flexible Node.js framework for  
+   building high-performance APIs
 - **Authentication**: JWT (JSON Web Token) for user authentication
 - **Database: Mongo DB** - No SQL database for storing application data
 - **ORM: Mongoose** - For database interactions
