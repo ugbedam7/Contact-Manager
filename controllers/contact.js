@@ -97,10 +97,6 @@ const getContacts = async (req, res) => {
       contacts = await Contact.find({});
     }
 
-    // const contacts = await Contact.find({})
-    //   .select("-__v -imgId -updatedAt -createdAt")
-    //   .populate({ path: "owner", select: "fullname email" });
-
     res.status(200).json(contacts);
   } catch (err) {
     res.status(500).json({
