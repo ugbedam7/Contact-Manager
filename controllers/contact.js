@@ -77,7 +77,7 @@ const createContact = async (req, res) => {
     });
   } finally {
     // Ensure file is deleted even if an error occurs
-    if (filePath) {
+    if (filePath && !filePath.startsWith("http")) {
       fs.unlink(filePath, (err) => {
         if (err) console.error("Error deleting file:", err);
       });
