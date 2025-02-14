@@ -1,19 +1,19 @@
-const User = require('../models/user');
-const { hashPassword, comparePassword } = require('../utils/authHasher');
-const { generateToken } = require('../utils/generateToken');
+const User = require("../models/user");
+const { hashPassword, comparePassword } = require("../utils/authHasher");
+const { generateToken } = require("../utils/generateToken");
 
 // @Desc Register a new user
 // @Route POST /api/auth/register
 // @Access Public
 const registerUser = async (req, res) => {
   const {
-    body: { fullname, email, password }
+    body: { firstname, lastname, email, password }
   } = req;
 
-  if (!fullname || !email || !password) {
+  if (!firstname || !lastname || !email || !password) {
     return res.status(400).json({
       success: false,
-      error: 'Missing required fields'
+      error: "Missing required fields"
     });
   }
 
@@ -34,7 +34,8 @@ const registerUser = async (req, res) => {
     // Create a new user
     const user = new User({
       email,
-      fullname,
+      firstname,
+      lastname,
       password: hashedPassword
     });
 
@@ -51,7 +52,7 @@ const registerUser = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: 'User created successfully',
+      message: "User created successfully",
       newUser
     });
   } catch (err) {
@@ -75,7 +76,7 @@ const loginUser = async (req, res) => {
     if (!user) {
       return res.status(400).json({
         success: false,
-        error: 'Invalid credentials'
+        error: "Invalid credentials"
       });
     }
 
@@ -84,7 +85,7 @@ const loginUser = async (req, res) => {
     if (!isPasswordValid) {
       return res.status(400).json({
         success: false,
-        error: 'Invalid credentials'
+        error: "Invalid credentials"
       });
     }
 
@@ -93,7 +94,7 @@ const loginUser = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: 'User Login successfull',
+      message: "User Login successfull",
       accessToken,
       user
     });
@@ -111,16 +112,16 @@ const loginUser = async (req, res) => {
 const logoutUser = async (req, res) => {
   // Invalidates the token when the user logs out
   try {
-    res.cookie('token', '', {
+    res.cookie("token", "", {
       httpOnly: true,
-      secure: process.env.NODE_ENV !== 'development',
-      sameSite: 'strict',
+      secure: process.env.NODE_ENV !== "development",
+      sameSite: "strict",
       expires: new Date(0)
     });
 
     res.status(200).json({
       success: true,
-      message: 'User logged out.'
+      message: "User logged out."
     });
   } catch (err) {
     res.status(500).json({
