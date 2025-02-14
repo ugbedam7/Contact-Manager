@@ -88,9 +88,18 @@ const createContact = async (req, res) => {
 // Get All Contacts
 const getContacts = async (req, res) => {
   try {
-    const contacts = await Contact.find({})
-      .select("-__v -imgId -updatedAt -createdAt")
-      .populate({ path: "owner", select: "fullname email" });
+    const { userId } = req.query;
+    let contacts;
+
+    if (userId) {
+      contacts = await Contact.find({ owner: userId });
+    } else {
+      contacts = await Contact.find({});
+    }
+
+    // const contacts = await Contact.find({})
+    //   .select("-__v -imgId -updatedAt -createdAt")
+    //   .populate({ path: "owner", select: "fullname email" });
 
     res.status(200).json(contacts);
   } catch (err) {
