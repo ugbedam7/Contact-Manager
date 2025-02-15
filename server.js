@@ -1,9 +1,9 @@
-const express = require('express');
-const connectDB = require('./database/db');
-const authRoutes = require('./routes/user');
-const contactRoutes = require('./routes/contact');
-const cors = require('cors');
-require('dotenv').config();
+const express = require("express");
+const connectDB = require("./database/db");
+const authRoutes = require("./routes/user");
+const contactRoutes = require("./routes/contact");
+const cors = require("cors");
+require("dotenv").config();
 
 // Initialize Express
 const app = express();
@@ -11,19 +11,19 @@ const PORT = process.env.PORT || 5000;
 
 // CORS Options definition
 const corsOptions = {
-  origin: ['https://contact-app-fe.netlify.app', 'http://localhost:5173'],
+  origin: ["https://contact-manager-fe.netlify.app", "http://localhost:5173"],
 
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   allowedHeaders: [
-    'Authorization',
-    'Content-Type',
-    'X-Requested-With',
-    'Accept',
-    'Origin',
-    'Access-Control-Allow-Origin',
-    'Access-Control-Allow-Headers',
-    'Access-Control-Allow-Methods',
-    'Access-Control-Allow-Credentials'
+    "Authorization",
+    "Content-Type",
+    "X-Requested-With",
+    "Accept",
+    "Origin",
+    "Access-Control-Allow-Origin",
+    "Access-Control-Allow-Headers",
+    "Access-Control-Allow-Methods",
+    "Access-Control-Allow-Credentials"
   ],
   credentials: true
 };
@@ -34,8 +34,8 @@ app.use(express.json());
 app.use(cors(corsOptions));
 
 // Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/contacts', contactRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/contacts", contactRoutes);
 
 // Start Server
 const start = async () => {
