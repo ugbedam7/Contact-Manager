@@ -244,7 +244,7 @@ const updateContactImage = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "Image updated",
+      message: "Image updated Successfully",
       contact
     });
   } catch (err) {
